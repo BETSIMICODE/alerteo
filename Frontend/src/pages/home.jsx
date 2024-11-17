@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Logo from "../../public/img/logo.jpeg"; // Assure-toi que le chemin de l'image est correct
 import {
   Card,
@@ -17,6 +17,7 @@ import { FeatureCard, TeamCard } from "@/widgets/cards";
 import { featuresData, teamData, contactData } from "@/data";
 
 export function Home() {
+  const [dataSociety, setDataSociety] = useState([])
   return (
     <>
       <div className="relative flex h-screen content-center items-center justify-center pt-16 pb-32">
