@@ -1,146 +1,76 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import {
-  Navbar as MTNavbar,
-  MobileNav,
-  Typography,
-  Button,
-  IconButton,
-} from "@material-tailwind/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+// src/components/Navbar.js
+import { useState } from "react"; // Importation de useState pour gérer l'état du menu mobile
+import { Link } from "react-router-dom"; // Utilise react-router-dom pour la navigation
+import Logo from "../../../public/img/logo.jpeg"; // Assure-toi que le chemin de l'image est correct
 
-export function Navbar({ brandName, brandImage, routes, action }) {
-  const [openNav, setOpenNav] = React.useState(false);
+const Navbar = () => {
+  // Créer un état pour gérer l'affichage du menu mobile
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  React.useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 960) setOpenNav(false);
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const navList = (
-    <ul className="mb-4 mt-2 flex flex-col gap-2 text-inherit lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
-      {routes.map(({ name, path, icon, href, target }) => (
-        <Typography
-          key={name}
-          as="li"
-          variant="small"
-          color="inherit"
-          className="capitalize"
-        >
-          {href ? (
-            <a
-              href={href}
-              target={target}
-              rel={target === "_blank" ? "noopener noreferrer" : undefined}
-              className="flex items-center gap-1 p-1 font-bold"
-            >
-              {icon &&
-                React.createElement(icon, {
-                  className: "w-[18px] h-[18px] opacity-75 mr-1",
-                })}
-              {name}
-            </a>
-          ) : (
-            <Link
-              to={path}
-              target={target}
-              className="flex items-center gap-1 p-1 font-bold"
-            >
-              {icon &&
-                React.createElement(icon, {
-                  className: "w-[18px] h-[18px] opacity-75 mr-1",
-                })}
-              {name}
-            </Link>
-          )}
-        </Typography>
-      ))}
-    </ul>
-  );
+  // Fonction pour basculer l'état du menu mobile
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
-    <MTNavbar color="transparent" className="p-3">
-      <div className="container mx-auto flex items-center justify-between text-white">
-        <Link to="/" aria-label={brandName}>
-          {brandImage ? (
-            <img
-              src={brandImage}
-              alt={brandName}
-              className="h-10 w-auto cursor-pointer"
-            />
-          ) : (
-            <Typography className="mr-4 ml-2 cursor-pointer py-1.5 font-bold">
-              {brandName}
-            </Typography>
-          )}
-        </Link>
-
-        <div className="hidden lg:block">{navList}</div>
-
-        <div className="hidden gap-2 lg:flex">
-          {React.cloneElement(action, {
-            className: "hidden lg:inline-block",
-          })}
+    <nav className="p-4 shadow-md font-poppins"> {/* Applique la police Poppins */}
+      <div className="container mx-auto flex items-center justify-between">
+        {/* Logo et Titre */}
+        <div className="flex items-center space-x-4">
+          <img
+            src={Logo} // Utilisation de l'image logo
+            alt="Logo"
+            className="h-20 w-30" // Taille du logo
+          />
+          <Link to="/" className="text-white text-lg font-bold">
+            {/* Titre de l'application */}
+          </Link>
         </div>
 
-        <IconButton
-          variant="text"
-          size="sm"
-          color="white"
-          className="ml-auto text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
-          onClick={() => setOpenNav(!openNav)}
-          aria-label="Toggle Navigation"
+        {/* Menu de navigation pour les écrans larges */}
+        <div className="hidden md:flex space-x-6">
+          <Link to="/home" className="text-white hover:text-blue-400">
+            Accueil
+          </Link>
+          <Link to="/contact" className="text-white hover:text-blue-400">
+            Contact
+          </Link>
+          <Link to="/sign-in" className="text-white hover:text-blue-400">
+            Sign-in
+          </Link>
+          <Link to="/sign-up" className="text-white hover:text-blue-400">
+            Sign-up
+          </Link>
+        </div>
+
+        {/* Bouton mobile */}
+        <button 
+          onClick={toggleMenu} // Changer l'état du menu mobile au clic
+          className="text-white md:hidden"
         >
-          {openNav ? (
-            <XMarkIcon strokeWidth={2} className="h-6 w-6" />
-          ) : (
-            <Bars3Icon strokeWidth={2} className="h-6 w-6" />
-          )}
-        </IconButton>
+          <i className="fas fa-bars"></i> {/* Icône menu mobile (FontAwesome) */}
+        </button>
       </div>
 
-      <MobileNav
-        className="rounded-xl bg-white px-4 pt-2 pb-4 text-blue-gray-900"
-        open={openNav}
-      >
-        <div className="container mx-auto">
-          {navList}
-
-          {React.cloneElement(action, {
-            className: "w-full block",
-          })}
+      {/* Menu mobile */}
+      <div className={`md:hidden ${isMenuOpen ? "block" : "hidden"}`}>
+        <div className="flex flex-col space-y-4 p-4">
+          <Link to="/home" className="text-white hover:text-blue-400">
+            Accueil
+          </Link>
+          <Link to="/contact" className="text-white hover:text-blue-400">
+            Contact
+          </Link>
+          <Link to="/sign-in" className="text-white hover:text-blue-400">
+            Sign-in
+          </Link>
+          <Link to="/sign-up" className="text-white hover:text-blue-400">
+            Sign-up
+          </Link>
         </div>
-      </MobileNav>
-    </MTNavbar>
+      </div>
+    </nav>
   );
-}
-
-// Configuration par défaut, avec l'image de la marque
-Navbar.defaultProps = {
-  brandName: "",
-  brandImage: "/logo.png", // Remplacez par l'URL de votre image
-  action: (
-    <a
-      href="https://www.creative-tim.com/product/material-tailwind-kit-react"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <Button variant="gradient" size="sm" fullWidth>
-        Free Download
-      </Button>
-    </a>
-  ),
 };
 
-Navbar.propTypes = {
-  brandName: PropTypes.string,
-  brandImage: PropTypes.string,
-  routes: PropTypes.arrayOf(PropTypes.object).isRequired,
-  action: PropTypes.node,
-};
-
-export default Navbar;
+export { Navbar };
