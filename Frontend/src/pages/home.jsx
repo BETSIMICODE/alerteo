@@ -1,4 +1,5 @@
 import React from "react";
+import Logo from "../../public/img/logo.jpeg"; // Assure-toi que le chemin de l'image est correct
 import {
   Card,
   CardBody,
@@ -29,13 +30,18 @@ export function Home() {
                 color="white"
                 className="mb-6 font-black"
               >
-                <button type="button" className="mb-6 font-">Alerter</button>
+               <button type="button" className="flex m-auto rounded-2xl border-4 p-3 border-yellow-500/100 ">
+  a
+  <span className=" animate-bounce-up text-red-600 text-6xl">!</span>
+  erteo
+</button>
+
               </Typography>
-              
             </div>
           </div>
         </div>
       </div>
+      
       <section className="-mt-32 bg-white px-4 pb-20 pt-4">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -51,6 +57,7 @@ export function Home() {
               />
             ))}
           </div>
+
           <div className="mt-32 flex flex-wrap items-center">
             <div className="mx-auto -mt-8 w-full px-4 md:w-5/12">
               <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-blue-gray-900 p-2 text-center shadow-lg">
@@ -64,9 +71,8 @@ export function Home() {
                 Working with us is a pleasure
               </Typography>
               <Typography className="mb-8 font-normal text-blue-gray-500">
-                Don't let your uses guess by attaching tooltips and popoves to
-                any element. Just make sure you enable them first via
-                JavaScript.
+                Don't let your users guess by attaching tooltips and popovers to
+                any element. Just make sure you enable them first via JavaScript.
                 <br />
                 <br />
                 The kit comes with three pre-built pages to help you get started
@@ -104,11 +110,12 @@ export function Home() {
           </div>
         </div>
       </section>
+
       <section className="px-4 pt-20 pb-48">
         <div className="container mx-auto">
           <PageTitle section="Our Team" heading="Here are our heroes">
             According to the National Oceanic and Atmospheric Administration,
-            Ted, Scambos, NSIDClead scentist, puts the potentially record
+            Ted, Scambos, NSIDC lead scientist, puts the potentially record
             maximum.
           </PageTitle>
           <div className="mt-24 grid grid-cols-1 gap-12 gap-x-24 md:grid-cols-2 xl:grid-cols-4">
@@ -132,10 +139,11 @@ export function Home() {
           </div>
         </div>
       </section>
+
       <section className="relative bg-white py-24 px-4">
         <div className="container mx-auto">
           <PageTitle section="Co-Working" heading="Build something">
-            Put the potentially record low maximum sea ice extent tihs year down
+            Put the potentially record low maximum sea ice extent this year down
             to low ice. According to the National Oceanic and Atmospheric
             Administration, Ted, Scambos.
           </PageTitle>
@@ -177,7 +185,7 @@ export function Home() {
                   color="gray"
                   className="flex items-center font-normal"
                 >
-                  I agree the
+                  I agree to the
                   <a
                     href="#"
                     className="font-medium transition-colors hover:text-gray-900"
@@ -194,6 +202,7 @@ export function Home() {
           </form>
         </div>
       </section>
+
       <div className="bg-white">
         <Footer />
       </div>
