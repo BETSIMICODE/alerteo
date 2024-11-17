@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Connexion</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+<div class="container">
+    <div class="text">Authentification</div>
+    <form class="formContent" action="{{ url_for('auth.login') }}" method="post">
+        <div class="form-row">
+            <div class="input-data">
+                <input type="text" name="session" required>
+                <div class="underline"></div>
+                <label for="session">Session</label>
+            </div>
+            <div class="input-data">
+                <input type="password" name="password" required>
+                <div class="underline"></div>
+                <label for="password">Mot de passe</label>
+            </div>
+        </div>
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+        <div class="submit-btn">
+            <div class="submit-btn-input-data">
+                <div class="inner"></div>
+                <input name="connexion" type="submit" value="Connexion">
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

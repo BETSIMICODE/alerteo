@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<!-- tout est ok -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Information du projet</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/project-detail.css') }}">
+</head>
+<body>
+    
+    <div class="container">
+        <div class="header-project">
+            <a class="side-title"  href="{{ url_for('project.projectList') }}">
+                <img src="{{ url_for('static', filename='images/retour.png') }}" class="account">
+            </a> 
+            <div class="title">PROJET: {{ project_info["name"].upper()+" "+project_info["version"].upper()}}</div>
+            <a class="side-title">
+                <img src="{{ url_for('static', filename='images/account.png') }}" class="account">
+            </a>
+
+        </div>
+        <div class="content-btn-new">
+            <div class="parent-btn-new"> 
+                <a href="{{ url_for('project.projectNew') }}" class="button-new-sprint button">
+                    Nouveau sprint
+                </a>
+            </div>
+
+        </div>
+        <div class="content-input-group content-input-group-up">
+            <div class="input-group">
+                <label>Liste des sprints</label>
+                <select id="sprint-select">
+                    {% if sprint_list%}
+                    {% for sprint in sprint_list %}
+                        <option value="{{ sprint.id }}" data-description="{{ sprint.description }}">
+                            {{ sprint["code"] }} - {{ sprint["name"] }}
+                        </option>
+                    {% endfor %}
+                    {%else%}
+                    <option value="0" >
+                        Aucun sprint trouvé
+                    </option>
+                    {%endif%}
+
+                </select>
+            </div>
+            <div class="input-group input-group-description">
+                <label>Description</label>
+                <textarea id="sprint-description" readonly class="same-textarea" style="resize: none;">{{ sprint_list[0].description if sprint_list else "" }}</textarea>
+            </div>
+
+        </div>
+        <form class="content-input-group form-content-input-group"  >
+            <div class="parent-btn-new-test">
+                <button class="button button-new-test">
+                    Ajouter test
+                </button>
+            </div>
+            <div class="parent-input-group">
+                <div class="input-group">
+                    <label>Code test</label>
+                    <input name="code_test" type="text" class="input-group-code-test-input">
+                    </input>
+                </div>
+                <div class="input-group input-group-description">
+                    <label>Description du test</label>
+                    <textarea name="description_test" id="test-description" class="same-textarea" style="resize: none;"></textarea>
+                </div>
+            </div>
+
+        </form>
+        <div class="table-container">
+            <table class="test-table">
+                <thead>
+                    <tr>
+                        <th>Code test</th>
+                        <th>Description test</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for test in test_list %}
+                    <tr data-sprint-id="{{ test.sprint_id }}" data-test-id="{{ test.id }}">
+                        <td>{{ test["code"] }}</td>
+                        <td>{{ test["description"] }}</td>
+                        <td class="action-buttons">
+                            <a href="#"><img src="{{ url_for('static', filename='images/edit.png') }}" alt="Modifier"></a>
+                            <a href="#"><img src="{{ url_for('static', filename='images/delete.png') }}" alt="Supprimer"></a>
+                            <a href="#"><img src="{{ url_for('static', filename='images/look.png') }}" alt="Voir"></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <p id="messageNoData" >
+            Aucun test trouvé
+        </p>
+        
+    </div>
+
+    <script>
+        document.getElementById('sprint-select').addEventListener('change', function() {
+            var selectedOption = this.options[this.selectedIndex];
+            console.log(selectedOption);
+            var description = selectedOption.getAttribute('data-description');
+            document.getElementById('sprint-description').value = description;
+
+            var sprintId = selectedOption.value;
+            if (sprintId){
+                var testRows = document.querySelectorAll('.test-table tbody tr');
+                var compteur=0;
+                testRows.forEach(row => {
+                    if (row.getAttribute('data-sprint-id') === sprintId) {
+                        row.style.display = '';
+                        compteur+=1; // Afficher la ligne
+                    } else {
+                        row.style.display = 'none'; // Masquer la ligne
+                    }
+                });
+                if (compteur==0){
+                document.getElementById('messageNoData').style.display = 'block';
+                }else{
+                    document.getElementById('messageNoData').style.display = 'none';
+    
+                }
+            }
+            else{document.getElementById('messageNoData').style.display = 'block';}
+        });
+
+        // Déclencher l'événement change pour initialiser l'affichage
+        
+
+        document.getElementById('sprint-select').dispatchEvent(new Event('change'));
+
+        document.querySelector('.button-new-test').addEventListener('click', function(event) {
+            event.preventDefault();
+
+            var codeTest = document.querySelector('input[name="code_test"]').value;
+            var descriptionTest = document.querySelector('textarea[name="description_test"]').value;
+            var sprintId = document.getElementById('sprint-select').value;
+
+            fetch('/project/addTest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    code_test: codeTest,
+                    description_test: descriptionTest,
+                    sprint_id: sprintId
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erreur HTTP: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+
+                    // Ajouter le nouveau test au tableau
+                    var testTableBody = document.querySelector('.test-table tbody');
+                    var newRow = document.createElement('tr');
+                    newRow.setAttribute('data-sprint-id', sprintId);
+                    newRow.innerHTML = `
+                        <td>${codeTest}</td>
+                        <td>${descriptionTest}</td>
+                        <td class="action-buttons">
+                            <a href="#"><img src="{{ url_for('static', filename='images/edit.png') }}" alt="Modifier"></a>
+                            <a href="#"><img src="{{ url_for('static', filename='images/delete.png') }}" alt="Supprimer"></a>
+                            <a id="test-look" href="#"><img src="{{ url_for('static', filename='images/look.png') }}" alt="Voir"></a>
+                        </td>
+                    `;
+
+                    // Vérifier si le test appartient au sprint sélectionné
+                    if (sprintId === document.getElementById('sprint-select').value) {
+                        testTableBody.appendChild(newRow);
+                    }
+
+                    // Masquer le message "Aucun test trouvé" si nécessaire
+                    document.getElementById('messageNoData').style.display = 'none';
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+        });
+        document.querySelectorAll('.test-table .action-buttons a img[alt="Voir"]').forEach(function(element) {
+            element.addEventListener('click', function(event) {
+                event.preventDefault();
+                var testRow = this.closest('tr');
+                var testId = testRow.getAttribute('data-test-id'); // Assurez-vous que c'est l'ID correct
+                // Redirige vers la route avec le préfixe /test
+                window.location.href = '/test/testDetail/' + testId;
+            });
+        });
+    </script>
+
+</body>
+</html>

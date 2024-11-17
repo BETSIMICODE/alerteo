@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Résultats du Test</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/test-result.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+ 
+    <div class="container">
+        <div class="header-project">
+            <a class="side-title"  href="{{ url_for('test.testDetail', test_id=test_info['test_id']) }}">
+                <img src="{{ url_for('static', filename='images/retour.png') }}" class="account">
+            </a> 
+            <div class="title">Résultat du test {{ test_info['test_code'].upper()+": "+ test_info['test_description']}}</div>
+            <a class="side-title">
+                <img src="{{ url_for('static', filename='images/account.png') }}" class="account">
+            </a>
+        </div>
+        <div class="container-parent-left-right">
+            <div class="container-left">
+                
+                <div class="content-input-group form-content-input-group"  >
+                    <div class="input-group">
+                        <label>Date et heure du test</label>
+                        <input name="date_time" type="text" class="input-group-code-test-input" value="{{ date_time }}" readonly/>
+                    </div>
+                    <div class="input-group input-group-description">
+                        <label>Url de l'application lors du test</label>
+                        <input name="url_test" id="test-description" class="same-textarea" value=  "{{ test_info['test_url'] }}" readonly/>
+                    </div>
+                </div>
+                <div class="content-input-group">
+                    <div class="input-group input-group-text-to-scenario">
+                        <label class="input-group-text-to-scenario-label">Remarques</label>
+                        <input name="users_stories_qa_testing_to_scenario" id="test-description" class="input-group-text-to-scenario-input"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-right">
+               
+                <button class="button button-export-result" id="export-pdf">
+                    Exporter les résultats
+                </button>
+                <button class="button button-save-result" id="save-result">
+                    Enregistrer les résultats
+                </button>
+                
+            </div>
+        </div>
+        <div class="table-container">
+            <table class="test-table">
+                <thead>
+                    <tr>
+                        <th>Code scénario</th>
+                        <th>Type</th>
+                        <th>Identifiant de l'élément</th>
+                        <th>Valeur de l'élément</th>
+                        <th>Resultat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in resultats %}
+                        <tr  data-scenario-id="{{ result['scenario_id'] }}">
+                            <td>{{ result['scenario_code'] }}</td>
+                            <td>{{ result['scenario_type'] }}</td>
+                            <td>{{ result['scenario_label'] }}</td>
+                            <td>{{ result['scenario_value'] }}</td>
+                            <td class="result-scenario-result">{{ result['scenario_result'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        
+        </div>
+    </div>
+    
+    <!-- si #resultResultat == échec alors le couleur de son texte devient rouge si non vert -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const resultScenarioResult = document.querySelectorAll('.result-scenario-result');
+            resultScenarioResult.forEach(element => {
+                if (element.textContent.trim() == 'Réussi') {
+                    element.style.color = 'green';
+                } else {
+                    element.style.color = 'red';
+                }
+            });
+
+            document.getElementById('export-pdf').addEventListener('click', function() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                doc.text("Résultats du Test", 10, 10);
+
+                const dateTime = document.querySelector('input[name="date_time"]').value;
+                const testUrl = document.querySelector('input[name="url_test"]').value;
+                doc.text(`Date et heure du test: ${dateTime}`, 10, 20);
+                doc.text(`URL de l'application: ${testUrl}`, 10, 30);
+
+                const remark = document.querySelector('input[name="users_stories_qa_testing_to_scenario"]').value.trim();
+                if (remark) {
+                    doc.text(`Remarque: ${remark}`, 10, 40);
+                }
+
+                const startY = remark ? 50 : 40;
+
+                const rows = [];
+                document.querySelectorAll('.test-table tbody tr').forEach(row => {
+                    const rowData = [];
+                    row.querySelectorAll('td').forEach(cell => {
+                        rowData.push(cell.textContent);
+                    });
+                    rows.push(rowData);
+                });
+
+                doc.autoTable({
+                    startY: startY,
+                    head: [['Code scénario', 'Type', 'Identifiant de l\'élément', 'Valeur de l\'élément', 'Résultat']],
+                    body: rows,
+                });
+
+                doc.save('resultats_test.pdf');
+            });
+
+            document.getElementById('save-result').addEventListener('click', function() {
+                const dateTime = document.querySelector('input[name="date_time"]').value;
+                const testUrl = document.querySelector('input[name="url_test"]').value;
+                const remark = document.querySelector('input[name="users_stories_qa_testing_to_scenario"]').value.trim();
+                const testId = "{{ test_info['test_id'] }}"; // Assurez-vous que test_id est disponible dans le contexte
+                const results = [];
+
+                document.querySelectorAll('.test-table tbody tr').forEach(row => {
+                    const rowData = [];
+                    const scenarioId = row.getAttribute('data-scenario-id'); // Récupérer l'identifiant du scénario
+                    rowData.push(scenarioId); // Ajouter l'identifiant du scénario à rowData
+                    row.querySelectorAll('td').forEach(cell => {
+                        rowData.push(cell.textContent);
+                    });
+                    results.push(rowData);
+                });
+
+                const queryString = new URLSearchParams({
+                    dateTime: dateTime,
+                    test_id: testId,
+                    url_test: testUrl,
+                    remark: remark,
+                    results: JSON.stringify(results)
+                }).toString();
+
+                // Utiliser fetch pour envoyer la requête GET sans redirection
+                fetch(`/test/saveTestAndArchive?${queryString}`, {
+                    method: 'GET'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Les résultats ont été enregistrés et archivés avec succès.');
+                    } else {
+                        alert('Une erreur est survenue lors de l\'enregistrement.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    alert('Une erreur est survenue lors de l\'enregistrement.');
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
