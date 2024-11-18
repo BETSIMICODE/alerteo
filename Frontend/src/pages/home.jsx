@@ -18,6 +18,9 @@ import { featuresData, teamData, contactData } from "@/data";
 
 export function Home() {
   const [dataSociety, setDataSociety] = useState([])
+  const handleAlerteo = ()=>{
+    
+  }
   return (
     <>
       <div className="relative flex h-screen content-center items-center justify-center pt-16 pb-32">
@@ -31,9 +34,13 @@ export function Home() {
                 color="white"
                 className="mb-6 font-black"
               >
-               <button type="button" className="flex m-auto rounded-2xl border-4 p-3 border-yellow-500/100 ">
+
+<button
+  type="button"
+  className="flex m-auto rounded-full border-4 p-4 border-yellow-500 animate-bounce-up"
+>
   a
-  <span className=" animate-bounce-up text-red-600 text-6xl">!</span>
+  <span className="text-red-600 text-6xl animate-bounce font-poppins">!</span>
   erteo
 </button>
 
