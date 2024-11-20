@@ -1,0 +1,151 @@
+/* Style général de la page */
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(115deg, #56d8e4 10%, #9f01ea 90%);
+}
+.container {
+    width: 25%;
+    height: 60%;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .text{
+    display: flex;
+    width: 100%;
+    height: 30%;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    color: #776391;
+    /* background-color: blue; */
+  }
+  .formContent{
+    display: flex;
+    width: 100%;
+    height: 70%;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    /* background-color: pink; */
+  }
+  .form-row {
+    display: flex;
+    width: 80%;
+    height: 50%;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    /* position: relative;
+    margin-bottom: 30px; */
+    /* background-color: red; */
+  }
+  .error{
+    display: flex;
+    width: 80%;
+    height: 10%;
+    font-size: 0.9em;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    /* background-color: yellow; */
+    color: red;
+  }
+  .submit-btn{
+    width: 80%;
+    height: 30%;
+    /* background-color: aqua; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .submit-btn-input-data{
+    width: 100%;
+  }
+  .input-data {
+    position: relative;
+
+    width: 100%;
+  }
+  
+  .input-data input {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1em;
+    border: none;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.12);
+    outline: none!important;
+  }
+  
+  .input-data input:focus ~ label,
+  .input-data input:valid ~ label {
+    transform: translateY(-20px);
+    font-size: 14px;
+    color: #3498db;
+    outline: none;
+
+  }
+  
+  .input-data label {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    font-size: 16px;
+    pointer-events: none;
+    color: rgba(0, 0, 0, 0.6);
+    transition: all 0.3s ease;
+  }
+  
+  .input-data .underline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #3498db;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+  }
+  .input-data input:focus {
+    border-color: white;
+  }
+
+  .input-data input:valid{
+    border-color: white;
+  }
+  .input-data input:focus ~ .underline,
+  .input-data input:valid ~ .underline {
+    transform: scaleX(1);
+  }
+  
+  .submit-btn input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    color: #fff;
+    background: linear-gradient(135deg, #56ccf2, #2f80ed);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .submit-btn input[type="submit"]:hover {
+    background: linear-gradient(135deg, #2f80ed, #56ccf2);
+  }
+  
