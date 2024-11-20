@@ -219,10 +219,10 @@ if __name__ == "__main__":
     Society.create_table_if_not_exists()
 
     # # Ajout d'une nouvelle société
-    Society.newSociety(name="Jirama", description="Société semi-privée qui gère l'éléctricité et l'eau", tel="0209016671", mail="contactjirama@jirama.com", password="hello", location="Fianarantsoa", photo="path_to_photo.jpg")
-    Society.newSociety(name="Commune Urbaine Fianarantsoa", description="Responsable de la ville de Fianarantsoa", tel="261341234190", mail="contactcuf@cufianarantsoa.com", password="hello", location="Fianarantsoa", photo="path_to_photo.jpg")
-    Society.newSociety(name="Université de Fianarantsoa", description="Université publique de Fianarantsoa", tel="0205678643", mail="univ-fianar@univfianarantsoa.com", password="hello", location="Fianarantsoa", photo="path_to_photo.jpg")
-    Society.newSociety(name="Pompier Fianarantsoa", description="Pompier responsable des accident de Fianarantsoa ", tel="113", mail="cufpompier@cufianarantsoa.com", password="hello", location="Fianarantsoa", photo="path_to_photo.jpg")
+    # Society.newSociety(name="Jirama", description="Société semi-privée qui gère l'éléctricité et l'eau", tel="0209016671", mail="contactjirama@jirama.com", password="hello", location="Fianarantsoa", photo="path_to_photo.jpg")
+    # Society.newSociety(name="Commune Urbaine Fianarantsoa", description="Responsable de la ville de Fianarantsoa", tel="261341234190", mail="contactcuf@cufianarantsoa.com", password="hello", location="Fianarantsoa", photo="path_to_photo.jpg")
+    # Society.newSociety(name="Université de Fianarantsoa", description="Université publique de Fianarantsoa", tel="0205678643", mail="univ-fianar@univfianarantsoa.com", password="hello", location="Fianarantsoa", photo="path_to_photo.jpg")
+    # Society.newSociety(name="Pompier Fianarantsoa", description="Pompier responsable des accident de Fianarantsoa ", tel="113", mail="cufpompier@cufianarantsoa.com", password="hello", location="Fianarantsoa", photo="path_to_photo.jpg")
 
     # Affichage d'une société par son ID
     # society = Society.showSocietyById(1)
