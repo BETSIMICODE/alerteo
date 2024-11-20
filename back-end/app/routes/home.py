@@ -10,7 +10,7 @@ CORS(home)
 def get_societies():
     print("hello")
     societies = Society.showAllSociety()
-    print(societies)
+    print(Society.showAllSociety())
     return jsonify({
-        'societies': [society.to_dict() for society in societies]
+        'societies': societies
     })
