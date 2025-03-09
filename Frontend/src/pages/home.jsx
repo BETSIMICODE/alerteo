@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Logo from "../../public/img/logo.jpeg"; // Assure-toi que le chemin de l'image est correct
+import { motion } from "framer-motion";
 import {
   Card,
   CardBody,
@@ -15,16 +16,68 @@ import { FingerPrintIcon, UsersIcon } from "@heroicons/react/24/solid";
 import { PageTitle, Footer } from "@/widgets/layout";
 import { FeatureCard, TeamCard } from "@/widgets/cards";
 import { featuresData, teamData, contactData } from "@/data";
+import Chatbot from "@/components/Chatbot";
+import DangerMap from "./itineraire";
+import axios from "axios";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Modal from "@/components/Modal";
+import SideModal from "@/components/SideModal";
+import Navbar from "@/components/NavBar";
+import CameraScanner from "@/components/CameraScanner";
+gsap.registerPlugin(ScrollTrigger);
 
 export function Home() {
-  const [dataSociety, setDataSociety] = useState([])
-  const handleAlerteo = ()=>{
-    
-  }
+  const [images, setImages] = useState(null);
+  const [scanResults, setScanResults] = useState([]);
+  const [inputValue, setInputValue] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [symptoms, setSymptoms] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const sectionRef = useRef(null);
+  
+  useEffect(() => {
+    const section = sectionRef.current;
+    const elements = gsap.utils.toArray(section.children); // Récupère tous les enfants
+
+    gsap.fromTo(
+      elements,
+      { opacity: 0, y: 100, scale: 0.95 }, // Ajout de scale pour un effet plus naturel
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 1.5,
+        ease: "expo.out", // Effet pro avec une décélération fluide
+        stagger: 0.15, // Délais courts entre chaque élément pour une sensation fluide
+        scrollTrigger: {
+          trigger: section,
+          start: "top 70%", // Début fluide, sans que ça arrive trop tôt
+          end: "top 50%",
+          scrub: 0.5, // Lissage du scroll sans être trop brutal
+        },
+      }
+    );
+  }, []);
+
+  // Gère l'état du pop-up
+  const addSymptom = (e) => {
+    if (e.key === 'Enter' && inputValue.trim() !== '') {
+      setSymptoms([...symptoms, inputValue]);
+      setInputValue(''); // Réinitialiser le champ input après l'ajout
+    }
+  };
+  // Fonction pour ouvrir et fermer le modal
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   return (
     <>
-      <div className="relative flex h-screen content-center items-center justify-center pt-16 pb-32">
-        <div className="absolute top-0 h-full w-full bg-[url('/img/background-3.png')] bg-cover bg-center" />
+      <div className="relative font-poppins flex h-[80vh] content-center items-center justify-center pt-16 pb-32">
+        <Chatbot />
+        <Navbar />
+        <div className="absolute top-0 left-0 h-full w-full bg-black" />
         <div className="absolute top-0 h-full w-full bg-black/60 bg-cover bg-center" />
         <div className="max-w-8xl container relative mx-auto">
           <div className="flex flex-wrap items-center">
@@ -34,25 +87,25 @@ export function Home() {
                 color="white"
                 className="mb-6 font-black"
               >
-
-<button
-  type="button"
-  className="flex m-auto rounded-full border-4 p-4 border-yellow-500 animate-bounce-up"
->
-  a
-  <span className="text-red-600 text-6xl animate-bounce font-poppins">!</span>
-  erteo
-</button>
-
+                
+                <button
+                  type="button"
+                  className="flex m-auto rounded-full border-4 p-4 border-yellow-500 animate-bounce-up"
+                  onClick={toggleModal}
+                >
+                  a
+                  <span className="text-red-600 text-6xl animate-bounce font-poppins">!</span>
+                  erteo
+                </button>
               </Typography>
             </div>
           </div>
         </div>
       </div>
-      
-      <section className="-mt-32 bg-white px-4 pb-20 pt-4">
+
+      <section  className="-mt-32 bg-white px-4 pb-20 pt-4">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" ref={sectionRef}>
             {featuresData.map(({ color, title, icon, description }) => (
               <FeatureCard
                 key={title}
@@ -66,7 +119,7 @@ export function Home() {
             ))}
           </div>
 
-          <div className="mt-32 flex flex-wrap items-center">
+          <div className="mt-32 flex flex-wrap items-center p-6">
             <div className="mx-auto -mt-8 w-full px-4 md:w-5/12">
               <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-blue-gray-900 p-2 text-center shadow-lg">
                 <FingerPrintIcon className="h-8 w-8 text-white " />
@@ -76,141 +129,72 @@ export function Home() {
                 className="mb-3 font-bold"
                 color="blue-gray"
               >
-                Working with us is a pleasure
+                Contribuez à Sauver des Vies
               </Typography>
               <Typography className="mb-8 font-normal text-blue-gray-500">
-                Don't let your users guess by attaching tooltips and popovers to
-                any element. Just make sure you enable them first via JavaScript.
-                <br />
-                <br />
-                The kit comes with three pre-built pages to help you get started
-                faster. You can change the text and images and you're good to
-                go. Just make sure you enable them first via JavaScript.
+                Chaque don renforce notre capacité à détecter et à agir rapidement contre les épidémies
               </Typography>
-              <Button variant="filled">read more</Button>
+              <Button onClick={() => setIsOpen(true)} variant="filled" className="w-full bg-gradient-to-r from-yellow-400 to-black text-white py-3 rounded-lg hover:opacity-90 transition">Faire un don</Button>
             </div>
             <div className="mx-auto mt-24 flex w-full justify-center px-4 md:w-4/12 lg:mt-0">
-              <Card className="shadow-lg border shadow-gray-500/10 rounded-lg">
-                <CardHeader floated={false} className="relative h-56">
-                  <img
-                    alt="Card Image"
-                    src="/img/teamwork.png"
-                    className="h-full w-full"
-                  />
-                </CardHeader>
-                <CardBody>
-                  <Typography variant="small" color="blue-gray" className="font-normal">Enterprise</Typography>
-                  <Typography
-                    variant="h5"
-                    color="blue-gray"
-                    className="mb-3 mt-2 font-bold"
-                  >
-                    Top Notch Services
-                  </Typography>
-                  <Typography className="font-normal text-blue-gray-500">
-                    The Arctic Ocean freezes every winter and much of the
-                    sea-ice then thaws every summer, and that process will
-                    continue whatever happens.
-                  </Typography>
-                </CardBody>
-              </Card>
+              <div className="grid grid-cols-2 gap-4">
+                <img src="/img/p1.jpg" alt="" className="rounded-lg shadow-xl" />
+                <img src="/img/b2.jpg" alt="" className="rounded-lg shadow-xl" />
+                <img src="/img/b4.jpg" alt="" className="rounded-lg shadow-xl" />
+                <img src="/img/b3.jpg" alt="" className="rounded-lg shadow-xl" />
+              </div>
+
+
             </div>
           </div>
         </div>
       </section>
-
+      {/* <DangerMap /> */}
       <section className="px-4 pt-20 pb-48">
-        <div className="container mx-auto">
-          <PageTitle section="Our Team" heading="Here are our heroes">
-            According to the National Oceanic and Atmospheric Administration,
-            Ted, Scambos, NSIDC lead scientist, puts the potentially record
-            maximum.
-          </PageTitle>
-          <div className="mt-24 grid grid-cols-1 gap-12 gap-x-24 md:grid-cols-2 xl:grid-cols-4">
-            {teamData.map(({ img, name, position, socials }) => (
-              <TeamCard
-                key={name}
-                img={img}
-                name={name}
-                position={position}
-                socials={
-                  <div className="flex items-center gap-2">
-                    {socials.map(({ color, name }) => (
-                      <IconButton key={name} color={color} variant="text">
-                        <i className={`fa-brands text-xl fa-${name}`} />
-                      </IconButton>
-                    ))}
-                  </div>
-                }
-              />
-            ))}
-          </div>
-        </div>
+        <CameraScanner
+          onSearch={(img) => setImages(img)}
+          onImageUpload={(img) => setImages(img)}
+          onScanResults={(results) => setScanResults(results)}
+        />
+
+        {scanResults.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="mt-6 backdrop-blur-lg border border-white/30 p-6 rounded-2xl shadow-xl  flex flex-col items-center space-y-4 w-full "
+          >
+
+
+            <h3 className="text-lg font-bold text-black drop-shadow-md">
+              Résultat du scan :
+            </h3>
+
+            <p className="text-xl font-semibold text-blue-300 drop-shadow-lg">
+              {scanResults[0].nom}
+            </p>
+
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="px-6 py-2 rounded-full bg-gradient-to-r from-blue-500 to-blue-700 text-white font-medium shadow-lg hover:shadow-2xl transition-all"
+              onClick={() => setScanResults([])}
+            >
+              Fermer
+            </motion.button>
+            
+          </motion.div>
+        )}
       </section>
 
-      <section className="relative bg-white py-24 px-4">
-        <div className="container mx-auto">
-          <PageTitle section="Co-Working" heading="Build something">
-            Put the potentially record low maximum sea ice extent this year down
-            to low ice. According to the National Oceanic and Atmospheric
-            Administration, Ted, Scambos.
-          </PageTitle>
-          <div className="mx-auto mt-20 mb-48 grid max-w-5xl grid-cols-1 gap-16 md:grid-cols-2 lg:grid-cols-3">
-            {contactData.map(({ title, icon, description }) => (
-              <Card
-                key={title}
-                color="transparent"
-                shadow={false}
-                className="text-center text-blue-gray-900"
-              >
-                <div className="mx-auto mb-6 grid h-14 w-14 place-items-center rounded-full bg-blue-gray-900 shadow-lg shadow-gray-500/20">
-                  {React.createElement(icon, {
-                    className: "w-5 h-5 text-white",
-                  })}
-                </div>
-                <Typography variant="h5" color="blue-gray" className="mb-2">
-                  {title}
-                </Typography>
-                <Typography className="font-normal text-blue-gray-500">
-                  {description}
-                </Typography>
-              </Card>
-            ))}
-          </div>
-          <PageTitle section="Contact Us" heading="Want to work with us?">
-            Complete this form and we will get back to you in 24 hours.
-          </PageTitle>
-          <form className="mx-auto w-full mt-12 lg:w-5/12">
-            <div className="mb-8 flex gap-8">
-              <Input variant="outlined" size="lg" label="Full Name" />
-              <Input variant="outlined" size="lg" label="Email Address" />
-            </div>
-            <Textarea variant="outlined" size="lg" label="Message" rows={8} />
-            <Checkbox
-              label={
-                <Typography
-                  variant="small"
-                  color="gray"
-                  className="flex items-center font-normal"
-                >
-                  I agree to the
-                  <a
-                    href="#"
-                    className="font-medium transition-colors hover:text-gray-900"
-                  >
-                    &nbsp;Terms and Conditions
-                  </a>
-                </Typography>
-              }
-              containerProps={{ className: "-ml-2.5" }}
-            />
-            <Button variant="gradient" size="lg" className="mt-8" fullWidth>
-              Send Message
-            </Button>
-          </form>
-        </div>
-      </section>
-
+          <SideModal isOpen={isOpen} setIsOpen={setIsOpen} />
+   
+      <div>
+        <DangerMap />
+      </div>
+      {isModalOpen && (
+        <Modal setIsModalOpen={toggleModal} /> // Passe la fonction de fermeture en prop
+      )}
       <div className="bg-white">
         <Footer />
       </div>

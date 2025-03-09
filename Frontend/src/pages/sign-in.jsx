@@ -4,10 +4,48 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";  // Importer useNavigate
+import { useState } from "react";
+import axios from "axios";
 
 export function SignIn() {
+  // Déclaration des états pour capturer les valeurs du formulaire
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // Initialiser le hook de navigation
+  const navigate = useNavigate();
+
+  // Fonction pour envoyer la requête de connexion
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Création de l'objet avec les données du formulaire
+    const userData = {
+      email,
+      password,
+      agreeTerms,
+      subscribeNewsletter,
+    };
+
+    try {
+      // Remplace l'URL par celle de ton serveur Express
+      
+
+      // Si la connexion réussit, rediriger l'utilisateur vers une page protégée
+      if (email == 'tambobe@gmail.com' && password == "harena2202") {
+        navigate("/superadmin/adminmanagement"); // Remplace "/private-dashboard" par l'URL de ta page protégée
+      }
+    } catch (error) {
+      // Affichage des erreurs, si elles existent
+      setErrorMessage("Une erreur s'est produite. Vérifiez vos informations.");
+      console.error(error);
+    }
+  };
+
   return (
     <section className="m-8 flex gap-4">
       <div className="w-full lg:w-3/5 mt-24">
@@ -15,7 +53,7 @@ export function SignIn() {
           <Typography variant="h2" className="font-bold mb-4">Sign In</Typography>
           <Typography variant="paragraph" color="blue-gray" className="text-lg font-normal">Enter your email and password to Sign In.</Typography>
         </div>
-        <form className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2">
+        <form onSubmit={handleSubmit} className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2">
           <div className="mb-1 flex flex-col gap-6">
             <Typography variant="small" color="blue-gray" className="-mb-3 font-medium">
               Your email
@@ -23,6 +61,8 @@ export function SignIn() {
             <Input
               size="lg"
               placeholder="name@mail.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
               labelProps={{
                 className: "before:content-none after:content-none",
@@ -35,12 +75,15 @@ export function SignIn() {
               type="password"
               size="lg"
               placeholder="********"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
               labelProps={{
                 className: "before:content-none after:content-none",
               }}
             />
           </div>
+
           <Checkbox
             label={
               <Typography
@@ -58,10 +101,19 @@ export function SignIn() {
               </Typography>
             }
             containerProps={{ className: "-ml-2.5" }}
+            checked={agreeTerms}
+            onChange={(e) => setAgreeTerms(e.target.checked)}
           />
-          <Button className="mt-6" fullWidth>
+
+          <Button type="submit" className="mt-6" fullWidth>
             Sign In
           </Button>
+
+          {errorMessage && (
+            <Typography variant="small" color="red" className="mt-4 text-center">
+              {errorMessage}
+            </Typography>
+          )}
 
           <div className="flex items-center justify-between gap-2 mt-6">
             <Checkbox
@@ -75,6 +127,8 @@ export function SignIn() {
                 </Typography>
               }
               containerProps={{ className: "-ml-2.5" }}
+              checked={subscribeNewsletter}
+              onChange={(e) => setSubscribeNewsletter(e.target.checked)}
             />
             <Typography variant="small" className="font-medium text-gray-900">
               <a href="#">
@@ -109,7 +163,6 @@ export function SignIn() {
             <Link to="/sign-up" className="text-gray-900 ml-1">Create account</Link>
           </Typography>
         </form>
-
       </div>
       <div className="w-2/5 h-full hidden lg:block">
         <img
@@ -117,7 +170,6 @@ export function SignIn() {
           className="h-full w-full object-cover rounded-3xl"
         />
       </div>
-
     </section>
   );
 }

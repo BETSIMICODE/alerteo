@@ -1,28 +1,28 @@
-import {
-  ChatBubbleBottomCenterTextIcon,
-} from "@heroicons/react/24/solid";
+import { AiFillThunderbolt } from "react-icons/ai";
+import { TbTargetArrow } from "react-icons/tb";
+import { MdJoinInner } from "react-icons/md";
 
 export const featuresData = [
   {
     color: "gray",
-    title: "Awarded Agency",
-    icon: ChatBubbleBottomCenterTextIcon,
+    title: "Rapide & Efficace",
+    icon: AiFillThunderbolt,
     description:
-      "Divide details about your product or agency work into parts. A paragraph describing a feature will be enough.",
+      "Détection et alerte en temps réel pour une prise en charge immédiate.",
   },
   {
     color: "gray",
-    title: "Free Revisions",
-    icon: ChatBubbleBottomCenterTextIcon,
+    title: "Analyse Précise",
+    icon: TbTargetArrow,
     description:
-      "Keep you user engaged by providing meaningful information. Remember that by this time, the user is curious.",
+      "Grace à l'IA et au big data, nous identifions les foyers épidémiques avec précision.",
   },
   {
     color: "gray",
-    title: "Verified Company",
-    icon: ChatBubbleBottomCenterTextIcon,
+    title: "Collaboration Active",
+    icon: MdJoinInner,
     description:
-      "Write a few lines about each one. A paragraph describing a feature will be enough. Keep you user engaged!",
+      "Les centres de snaté reçoivent des alertes instantanées pour intervenir plus vite.",
   },
 ];
 

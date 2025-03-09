@@ -1,0 +1,82 @@
+/* Super.css */
+.react-select__control {
+  border: 1px solid #d1d5db;
+
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  background-color: white;
+  box-shadow: none;
+  transition: all 0.3s ease;
+}
+
+.react-select__control--is-focused {
+  border-color: #D1D5DB;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4);
+}
+
+.react-select__menu {
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.react-select__option--is-focused {
+  background-color: #f3f4f6;
+}
+
+.react-select__option--is-selected {
+  color: white;
+}
+
+/* ADMIN MANAGEMENT TEO  */
+/* Styles pour le Modal */
+.modal-content {
+  background: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+  animation: zoomIn 0.5s ease-out;
+  position: relative;
+  /* Ajouté pour permettre un placement correct de l'icône */
+}
+
+.modal-icon {
+  color: #28a745;
+  font-size: 3rem;
+  margin: 0 auto 1rem;
+  /* Centrer l'icône horizontalement */
+  animation: checkMark 0.5s ease-out;
+  display: block;
+  /* Assure que l'icône est un élément de bloc pour le centrage */
+}
+
+.modal-title {
+  font-size: 1.3rem;
+  color: #333;
+  margin-bottom: 1rem;
+
+}
+
+.modal-message {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.modal-close-btn {
+  background: #e23728;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+
+.modal-close-btn:hover {
+  background: #cb2424;
+}
