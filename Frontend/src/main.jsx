@@ -1,28 +1,60 @@
-/**
-=========================================================
-* Material Tailwind Kit React - v2.1.0
-=========================================================
-* Product Page: https://www.creative-tim.com/product/material-tailwind-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/material-tailwind-dashboard-react/blob/main/LICENSE.md)
-* Coded by Creative Tim
-=========================================================
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
-import { BrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Route, RouterProvider, Routes } from "react-router-dom";
 import { ThemeProvider } from "@material-tailwind/react";
-import "../public/css/tailwind.css";
+import "../public/css/tailwind.css"; // Assure-toi que ton fichier CSS est correctement lié
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+import AdminPage from "./pages/PageSuperAdmin/Adminpage";
+import Dashboard from "./pages/PageSuperAdmin/Dashboard";
+import { Home, Profile, SignIn, SignUp } from "./pages";
+import { Navbar } from "@/widgets/layout"; // Assure-toi que ce composant existe
+import routes from "@/routes"; // Assure-toi que ce fichier est bien configuré
+import AdminManagement from "./pages/PageSuperAdmin/AdminManagement";
+
+// Configuration des routes
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "/home",
+    element: <Home />,
+  },
+  {
+    path: "/contact",
+    element: <Profile />,
+  },
+  {
+    path: "/sign-in",
+    element: <SignIn />,
+  },
+  {
+    path: "/sign-up",
+    element: <SignUp />,
+  },
+  {
+    path: "/superadmin",
+    element: <AdminPage />,
+    children: [
+      {
+        path: "dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "adminmanagement",
+        element: <AdminManagement />, // Assure-toi que ce composant est défini
+      },
+    ],
+  },
+]);
+
+
+
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </BrowserRouter>
+    <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </React.StrictMode>
 );
